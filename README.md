@@ -10,8 +10,8 @@
 
 # 目录
 
-- [Pre-reqs](#pre-reqs)
-- [Getting started](#getting-started)
+- [准备工作](#准备工作)
+- [开始](#开始)
 - [Deploying the app](#deploying-the-app)
 	- [Pre-reqs](#pre-reqs-1)
 	- [Deploying to Azure App Service](#deploying-to-azure-app-service)
@@ -35,16 +35,18 @@
 - [VS Code](https://code.visualstudio.com/)
 
 # 开始
-- 克隆代码库
-```
+克隆代码库
+```sh
 git clone --depth=1 https://github.com/Microsoft/TypeScript-Node-Starter.git <project_name>
 ```
-- 安装依赖
-```
+
+安装依赖
+```sh
 cd <project_name>
 npm install
 ```
-- 配置 MongoDB
+
+配置 MongoDB
 ```bash
 # 创建 db 目录
 sudo mkdir -p /data/db
@@ -56,25 +58,27 @@ sudo chmod 777 /data/db
 mkdir -p ~/data/db
 # 用户自己目录下的东西，自动就有读/写权限
 ```
-- 启动 mongodb
+
+启动 mongodb
 ```bash
 mongod
 
 # 或者这样
 mongod --dbpath ~/data/db
 ```
-- 构建和运行程序
+
+构建和运行程序
 ```bash
 npm run build
 npm start
 ```
-如果你正在使用 VS Code，你可以快键键 `cmd + shift + b` 来运行默认的构建任务（其实还是 `npm run build`），然后调出命令面板（`cmd + shift + p`）选择 `Tasks: Run Task` > `npm: start` 来执行 `npm start`。 
+如果你正在使用 VS Code，你可以快键键 `cmd + shift + b` 来运行默认的构建任务（其实还是 `npm run build`），然后调出命令面板（`cmd + shift + p`）选择 `Tasks: Run Task` \> `npm: start` 来执行 `npm start`。 
 
 > **关于编辑器！**— TypeScript  在[任何编辑器](http://www.typescriptlang.org/index.html#download-links)中都有强大的支持，只是本项目使用 [VS Code](https://code.visualstudio.com/) 的预先配置。在整个 README 中，我们将尝试找出 VS Code 真正令人眼前一亮的独特之处。
 
 最后，打开浏览器，访问`http://localhost:3000`即可。
 
-# Deploying the app（暂不需要）
+# Deploying the app（不需要，先不管）
 There are many ways to deploy an Node app, and in general, nothing about the deployment process changes because you're using TypeScript.
 In this section, I'll walk you through how to deploy this app to Azure App Service using the extensions available in VS Code because I think it is the easiest and fastest way to get started, as well as the most friendly workflow from a developer's perspective.
 
@@ -167,30 +171,24 @@ If you haven't created a cloud database yet, see [the setup instructions](#mlab)
 Deployment can fail for various reasons, if you get stuck with a page that says *Service Unavailable* or some other error, [open an issue](https://github.com/Microsoft/TypeScript-Node-Starter/issues/new) and I'll try to help you resolve the problems.
 
 # TypeScript + Node
-把 TypeScript 被引入到 Express 项目，需要做出哪些修改呢？在下几个章节中，我将展示给你看。请注意，该项目的所有配置不是只在这里有用，它可以随时用作其他 Node.js 项目向 TypeScript 迁移的参考。
+把 TypeScript 引入到 Express 项目，需要做出哪些修改呢？在接下来的几个章节中，我将展示给你看。请注意，该项目的所有配置不是只在这里有用，它可以随时用作其他 Node.js 项目向 TypeScript 迁移的参考。
 
 ## 安装 TypeScript
-仅仅需要 `npm`，就可以把 TypeScript 加到项目中来
-```
+仅需 `npm`，就可把 TypeScript 加到项目中来
+```sh
 npm install -D typescript
 ```
-If you're using VS Code then you're good to go!
-VS Code will detect and use the TypeScript version you have installed in your `node_modules` folder.
-For other editors, make sure you have the corresponding [TypeScript plugin](http://www.typescriptlang.org/index.html#download-links).
 
 如果你使用的是 VS Code，那你走运了！VS Code 会检测并使用你安装在 `node_modules` 下的 TypeScript 版本。对于其他编辑器，请确保你安装了对应的 [TypeScript 插件](http://www.typescriptlang.org/index.html#download-links)。
 
-## Project Structure
-The most obvious difference in a TypeScript + Node project is the folder structure.
-In a TypeScript project, it's best to have separate _source_  and _distributable_ files.
-TypeScript (`.ts`) files live in your `src` folder and after compilation are output as JavaScript (`.js`) in the `dist` folder.
-The `test` and `views` folders remain top level as expected.
+## 项目结构
+TypeScript + Node 项目与普通的 Node 项目最明显的不同之处就在于目录结构。在 TypeScript 项目中，最好是要划分为 _source_  和 _distributable_ 两类文件（即，源码文件和待发布文件）。以 `.ts` 结尾的 TypeScript 文件放在 `src` 目录下，而编译后产生的 `.js` 文件则会输出到 `dist` 目录下。`test` 和 `views` 目录依然放在根目录下。
 
-The full folder structure of this app is explained below:
+本应用的完整目录结构解释，见下表：
 
-> **Note!** Make sure you have already built the app using `npm run build`
+> **注意！** 请确保你已经执行了 `npm run build` 构建了应用
 
-| Name | Description |
+| 文件夹名称 | 描述 |
 | ------------------------ | --------------------------------------------------------------------------------------------- |
 | **.vscode**              | Contains VS Code specific settings                                                            |
 | **dist**                 | Contains the distributable (or output) from your TypeScript build. This is the code you ship  |
@@ -214,7 +212,7 @@ The full folder structure of this app is explained below:
 | .eslintrc                | Config settings for ESLint code style checking                                                |
 | .eslintignore            | Config settings for paths to exclude from linting                                             |
 
-## Building the project
+## 项目的构建
 It is rare for JavaScript projects not to have some kind of build pipeline these days, however Node projects typically have the least amount of build configuration.
 Because of this I've tried to keep the build as simple as possible.
 If you're concerned about compile time, the main watch task takes ~2s to refresh.
@@ -481,7 +479,7 @@ In this project, we are using a fairly basic set of rules with no additional cus
 ### Running ESLint
 Like the rest of our build steps, we use npm scripts to invoke ESLint.
 To run ESLint you can call the main build script or just the ESLint task.
-```
+```sh
 npm run build   // runs full build including ESLint
 npm run lint    // runs only ESLint
 ```
@@ -500,13 +498,12 @@ To enhance your development experience while working in VSCode we also provide y
 - [Azure Cosmos DB](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-cosmosdb)
 - [Azure App Service](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureappservice)
 
-# Dependencies
-Dependencies are managed through `package.json`.
-In that file you'll find two sections:
+# 依赖
+我们通过 `package.json` 管理第三方依赖。在该文件中，你能看到这两部分：
 
 ## `dependencies`
 
-| Package                         | Description                                                           |
+| 依赖包名                         | 描述                                                           |
 | ------------------------------- | --------------------------------------------------------------------- |
 | async                           | Utility library that provides asynchronous control flow.               |
 | bcrypt-nodejs                   | Library for hashing and salting user passwords.                       |
@@ -535,7 +532,7 @@ In that file you'll find two sections:
 
 ## `devDependencies`
 
-| Package                         | Description                                                            |
+| 依赖包名                         | 描述                                                            |
 | ------------------------------- | ---------------------------------------------------------------------- |
 | @types                          | Dependencies in this folder are `.d.ts` files used to provide types    |
 | chai                            | Testing utility library that makes it easier to write tests            |
@@ -556,4 +553,4 @@ A majority of this quick start's content was inspired or adapted from Sahat's ex
 
 ## License
 Copyright (c) Microsoft Corporation. All rights reserved.
-Licensed under the [MIT](LICENSE.txt) License.
+Licensed under the [MIT](LICENSE) License.
