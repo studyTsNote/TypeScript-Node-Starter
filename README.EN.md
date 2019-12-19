@@ -1,14 +1,15 @@
 # TypeScript Node Starter
 
-[原英文文档](README.EN.md)
+[![Dependency Status](https://david-dm.org/Microsoft/TypeScript-Node-Starter.svg)](https://david-dm.org/Microsoft/TypeScript-Node-Starter) [![Build Status](https://travis-ci.org/Microsoft/TypeScript-Node-Starter.svg?branch=master)](https://travis-ci.org/Microsoft/TypeScript-Node-Starter)
 
-**在线访问地址**： [https://typescript-node-starter.azurewebsites.net/](https://typescript-node-starter.azurewebsites.net/)
+**Live Demo**: [https://typescript-node-starter.azurewebsites.net/](https://typescript-node-starter.azurewebsites.net/)
 
-该项目的主要目的是展示用 TypeScript 编写 Node 项目的步骤和工作流程。我们将尽可能地保持更新，同时也鼓励并欢迎社区做出贡献和提出改进建议。
+![image](https://user-images.githubusercontent.com/820883/36764267-abbdb7f8-1be0-11e8-9678-2a9ea448d7f8.png)
 
-> fork 此项目仅为了小组学习 TypeScript 使用
+The main purpose of this repository is to show a good end-to-end project setup and workflow for writing Node code in TypeScript.
+We will try to keep this as up-to-date as possible, but community contributions and recommendations for improvements are encouraged and will be most welcome.
 
-# 目录
+# Table of contents:
 
 - [Pre-reqs](#pre-reqs)
 - [Getting started](#getting-started)
@@ -28,53 +29,54 @@
 	- [`devDependencies`](#devdependencies)
 - [Hackathon Starter Project](#hackathon-starter-project)
 
-# 准备工作
-在本地构建和运行应用，你需要预先安装以下东西：
-- [Node.js](https://nodejs.org/en/)
-- [MongoDB](https://docs.mongodb.com/manual/installation/)
-- [VS Code](https://code.visualstudio.com/)
+# Pre-reqs
+To build and run this app locally you will need a few things:
+- Install [Node.js](https://nodejs.org/en/)
+- Install [MongoDB](https://docs.mongodb.com/manual/installation/)
+- Install [VS Code](https://code.visualstudio.com/)
 
-# 开始
-- 克隆代码库
+# Getting started
+- Clone the repository
 ```
 git clone --depth=1 https://github.com/Microsoft/TypeScript-Node-Starter.git <project_name>
 ```
-- 安装依赖
+- Install dependencies
 ```
 cd <project_name>
 npm install
 ```
-- 配置 MongoDB
+- Configure your mongoDB server
 ```bash
-# 创建 db 目录
+# create the db directory
 sudo mkdir -p /data/db
-# 给上读/写权限
+# give the db correct read/write permissions
 sudo chmod 777 /data/db
 
-# 从 macOS 10.15 开始，即使管理员也无法在根目录下创建目录
-# 所以还是把 db 目录建在用户目录下吧
+# starting from macOS 10.15 even the admin cannot create directory at root
+# so lets create the db diretory under the home directory.
 mkdir -p ~/data/db
-# 用户自己目录下的东西，自动就有读/写权限
+# user account has automatically read and write permissions for ~/data/db.
 ```
-- 启动 mongodb
+- Start your mongoDB server (you'll probably want another command prompt)
 ```bash
 mongod
 
-# 或者这样
+# on macOS 10.15 or above the db directory is under home directory
 mongod --dbpath ~/data/db
 ```
-- 构建和运行程序
-```bash
+- Build and run the project
+```
 npm run build
 npm start
 ```
-如果你正在使用 VS Code，你可以快键键 `cmd + shift + b` 来运行默认的构建任务（其实还是 `npm run build`），然后调出命令面板（`cmd + shift + p`）选择 `Tasks: Run Task` > `npm: start` 来执行 `npm start`。 
+Or, if you're using VS Code, you can use `cmd + shift + b` to run the default build task (which is mapped to `npm run build`), and then you can use the command palette (`cmd + shift + p`) and select `Tasks: Run Task` > `npm: start` to run `npm start` for you.
 
-> **关于编辑器！**— TypeScript  在[任何编辑器](http://www.typescriptlang.org/index.html#download-links)中都有强大的支持，只是本项目使用 [VS Code](https://code.visualstudio.com/) 的预先配置。在整个 README 中，我们将尝试找出 VS Code 真正令人眼前一亮的独特之处。
+> **Note on editors!** - TypeScript has great support in [every editor](http://www.typescriptlang.org/index.html#download-links), but this project has been pre-configured for use with [VS Code](https://code.visualstudio.com/).
+Throughout the README We will try to call out specific places where VS Code really shines or where this project has been setup to take advantage of specific features.
 
-最后，打开浏览器，访问`http://localhost:3000`即可。
+Finally, navigate to `http://localhost:3000` and you should see the template being served and rendered locally!
 
-# Deploying the app（暂不需要）
+# Deploying the app
 There are many ways to deploy an Node app, and in general, nothing about the deployment process changes because you're using TypeScript.
 In this section, I'll walk you through how to deploy this app to Azure App Service using the extensions available in VS Code because I think it is the easiest and fastest way to get started, as well as the most friendly workflow from a developer's perspective.
 
@@ -88,7 +90,7 @@ For local development, running MongoDB on localhost is fine, however once we dep
 The easiest way to achieve this is by using a managed cloud database.
 There are many different providers, but the easiest one to get started with is [MongoLab](#mlab).
 
-###  Create a managed MongoDB with MongoLab
+### <a name="mlab"></a> Create a managed MongoDB with MongoLab
 1. Navigate to [MongoLab's Website](https://mlab.com/), sign up for a free account, and then log in.
 2. In the **MongoDB Deployments** section, click the **Create New** button.
 3. Select any provider (I recommend **Microsoft Azure** as it provides an easier path to upgrading to globally distributed instances later).
@@ -167,18 +169,17 @@ If you haven't created a cloud database yet, see [the setup instructions](#mlab)
 Deployment can fail for various reasons, if you get stuck with a page that says *Service Unavailable* or some other error, [open an issue](https://github.com/Microsoft/TypeScript-Node-Starter/issues/new) and I'll try to help you resolve the problems.
 
 # TypeScript + Node
-把 TypeScript 被引入到 Express 项目，需要做出哪些修改呢？在下几个章节中，我将展示给你看。请注意，该项目的所有配置不是只在这里有用，它可以随时用作其他 Node.js 项目向 TypeScript 迁移的参考。
+In the next few sections I will call out everything that changes when adding TypeScript to an Express project.
+Note that all of this has already been setup for this project, but feel free to use this as a reference for converting other Node.js projects to TypeScript.
 
-## 安装 TypeScript
-仅仅需要 `npm`，就可以把 TypeScript 加到项目中来
+## Getting TypeScript
+TypeScript itself is simple to add to any project with `npm`.
 ```
 npm install -D typescript
 ```
 If you're using VS Code then you're good to go!
 VS Code will detect and use the TypeScript version you have installed in your `node_modules` folder.
 For other editors, make sure you have the corresponding [TypeScript plugin](http://www.typescriptlang.org/index.html#download-links).
-
-如果你使用的是 VS Code，那你走运了！VS Code 会检测并使用你安装在 `node_modules` 下的 TypeScript 版本。对于其他编辑器，请确保你安装了对应的 [TypeScript 插件](http://www.typescriptlang.org/index.html#download-links)。
 
 ## Project Structure
 The most obvious difference in a TypeScript + Node project is the folder structure.
