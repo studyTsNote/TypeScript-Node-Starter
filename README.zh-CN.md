@@ -1,17 +1,10 @@
 # TypeScript Node Starter
 
-[![Dependency Status](https://david-dm.org/Microsoft/TypeScript-Node-Starter.svg)](https://david-dm.org/Microsoft/TypeScript-Node-Starter) [![Build Status](https://travis-ci.org/Microsoft/TypeScript-Node-Starter.svg?branch=master)](https://travis-ci.org/Microsoft/TypeScript-Node-Starter)
+**访问地址**: [https://typescript-node-starter.azurewebsites.net/](https://typescript-node-starter.azurewebsites.net/)
 
-[中文文档](README.zh-CN.md)
+该项目的主要目的是展示用 TypeScript 编写 Node 的良好步骤和工作流程。我们将尽可能地保持更新，但鼓励并欢迎社区做出贡献和提出改进建议。
 
-**Live Demo**: [https://typescript-node-starter.azurewebsites.net/](https://typescript-node-starter.azurewebsites.net/)
-
-![image](https://user-images.githubusercontent.com/820883/36764267-abbdb7f8-1be0-11e8-9678-2a9ea448d7f8.png)
-
-The main purpose of this repository is to show a good end-to-end project setup and workflow for writing Node code in TypeScript.
-We will try to keep this as up-to-date as possible, but community contributions and recommendations for improvements are encouraged and will be most welcome.
-
-# Table of contents:
+# 目录
 
 - [Pre-reqs](#pre-reqs)
 - [Getting started](#getting-started)
@@ -31,18 +24,18 @@ We will try to keep this as up-to-date as possible, but community contributions 
 	- [`devDependencies`](#devdependencies)
 - [Hackathon Starter Project](#hackathon-starter-project)
 
-# Pre-reqs
-To build and run this app locally you will need a few things:
-- Install [Node.js](https://nodejs.org/en/)
-- Install [MongoDB](https://docs.mongodb.com/manual/installation/)
-- Install [VS Code](https://code.visualstudio.com/)
+# 准备工作
+在本地构建和运行应用，你需要预先安装以下东西：
+- [Node.js](https://nodejs.org/en/)
+- [MongoDB](https://docs.mongodb.com/manual/installation/)
+- [VS Code](https://code.visualstudio.com/)
 
-# Getting started
-- Clone the repository
+# 开始
+- 克隆代码库
 ```
 git clone --depth=1 https://github.com/Microsoft/TypeScript-Node-Starter.git <project_name>
 ```
-- Install dependencies
+- 安装依赖
 ```
 cd <project_name>
 npm install
