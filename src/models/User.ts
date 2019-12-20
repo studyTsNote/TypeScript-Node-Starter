@@ -2,6 +2,7 @@ import bcrypt from "bcrypt-nodejs";
 import crypto from "crypto";
 import mongoose from "mongoose";
 
+// 导出一个交叉类型别名
 export type UserDocument = mongoose.Document & {
     email: string;
     password: string;
@@ -23,7 +24,7 @@ export type UserDocument = mongoose.Document & {
     gravatar: (size: number) => string;
 };
 
-type comparePasswordFunction = (candidatePassword: string, cb: (err: any, isMatch: any) => {}) => void;
+type comparePasswordFunction = (candidatePassword: string, cb: (err: Error, isMatch: boolean) => {}) => void;
 
 export interface AuthToken {
     accessToken: string;
