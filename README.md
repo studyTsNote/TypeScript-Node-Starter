@@ -107,7 +107,7 @@ TypeScript + Node 项目与普通的 Node 项目最明显的不同之处就在�
 | **src**/server.ts        | express 应用的入口文件                                                       |
 | **test**                 | 由于测试代码构建过程和源码不同，所以拿出来单独存放 |
 | **views**                | 应用在客户端渲染的视图代码。这里我们使用了 pug 模板引擎 |
-| .env.example             | API keys, tokens, 密码, 数据库链接地址。拷一份写上自己的配置，记住别发布到公共代码库里哦 |
+| .env.example             | API keys, tokens, 密码, 数据库链接地址。拷一份到 `.env` 填上自己的配置，记住别发布到公共代码库里哦 |
 | .travis.yml              | Travis CI 配置文件                                                        |
 | .copyStaticAssets.ts     | 一个拷贝图片、字体和 JS 库到 dist 目录的脚本 |
 | jest.config.js           | Jest 配置文件，运行 TS 编写的测试代码   |

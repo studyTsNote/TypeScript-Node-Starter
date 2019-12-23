@@ -10,8 +10,8 @@ import { Request, Response, NextFunction } from "express";
 const LocalStrategy = passportLocal.Strategy;
 const FacebookStrategy = passportFacebook.Strategy;
 
-passport.serializeUser<any, any>((user, done) => {
-    done(undefined, user.id);
+passport.serializeUser((user, done) => {
+    done(undefined, (user as UserDocument).id);
 });
 
 passport.deserializeUser((id, done) => {
@@ -25,7 +25,7 @@ passport.deserializeUser((id, done) => {
  * Sign in using Email and Password.
  */
 passport.use(new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
-    User.findOne({ email: email.toLowerCase() }, (err, user: any) => {
+    User.findOne({ email: email.toLowerCase() }, (err, user: UserDocument) => {
         if (err) { return done(err); }
         if (!user) {
             return done(undefined, false, { message: `Email ${email} not found.` });

@@ -1,5 +1,5 @@
 import express from "express";
-import compression from "compression";  // compresses requests
+import compression from "compression";
 import session from "express-session";
 import bodyParser from "body-parser";
 import lusca from "lusca";
@@ -11,7 +11,8 @@ import passport from "passport";
 import bluebird from "bluebird";
 import { MONGODB_URI, SESSION_SECRET } from "./util/secrets";
 
-const MongoStore = mongo(session);
+// API keys and Passport configuration
+import * as passportConfig from "./config/passport";
 
 // Controllers (route handlers)
 import * as homeController from "./controllers/home";
@@ -19,29 +20,29 @@ import * as userController from "./controllers/user";
 import * as apiController from "./controllers/api";
 import * as contactController from "./controllers/contact";
 
+// 使用 mongodb 存储 session
+const MongoStore = mongo(session);
 
-// API keys and Passport configuration
-import * as passportConfig from "./config/passport";
-
-// Create Express server
-const app = express();
-
-// Connect to MongoDB
+// 连接 MongoDB
 const mongoUrl = MONGODB_URI;
 mongoose.Promise = bluebird;
 
-mongoose.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true } ).then(
-    () => { /** ready to use. The `mongoose.connect()` promise resolves to undefined. */ },
-).catch(err => {
-    console.log("MongoDB connection error. Please make sure MongoDB is running. " + err);
+mongoose.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true } )
+.then(() => { 
+    // nothing to do
+}).catch(err => {
+    console.log("MongoDB 连接异常。请确认已运行 MongoDB 服务！" + err);
     // process.exit();
 });
+
+// 创建 Express 服务
+const app = express();
 
 // Express configuration
 app.set("port", process.env.PORT || 3000);
 app.set("views", path.join(__dirname, "../views"));
 app.set("view engine", "pug");
-app.use(compression());
+app.use(compression()); // 报文压缩（gzip...）
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
@@ -63,15 +64,15 @@ app.use((req, res, next) => {
     next();
 });
 app.use((req, res, next) => {
-    // After successful login, redirect back to the intended page
+    // 登录成功后，回到预先想要访问的页面
     if (!req.user &&
-    req.path !== "/login" &&
-    req.path !== "/signup" &&
-    !req.path.match(/^\/auth/) &&
-    !req.path.match(/\./)) {
+        req.path !== "/login" &&
+        req.path !== "/signup" &&
+        !req.path.match(/^\/auth/) &&
+        !req.path.match(/\./)) {
         req.session.returnTo = req.path;
     } else if (req.user &&
-    req.path == "/account") {
+        req.path == "/account") {
         req.session.returnTo = req.path;
     }
     next();
@@ -82,7 +83,7 @@ app.use(
 );
 
 /**
- * Primary app routes.
+ * 配置应用路由
  */
 app.get("/", homeController.index);
 app.get("/login", userController.getLogin);
@@ -103,13 +104,13 @@ app.post("/account/delete", passportConfig.isAuthenticated, userController.postD
 app.get("/account/unlink/:provider", passportConfig.isAuthenticated, userController.getOauthUnlink);
 
 /**
- * API examples routes.
+ * API 示例路由
  */
 app.get("/api", apiController.getApi);
 app.get("/api/facebook", passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getFacebook);
 
 /**
- * OAuth authentication routes. (Sign in)
+ * OAuth 认证路由（登录）
  */
 app.get("/auth/facebook", passport.authenticate("facebook", { scope: ["email", "public_profile"] }));
 app.get("/auth/facebook/callback", passport.authenticate("facebook", { failureRedirect: "/login" }), (req, res) => {
