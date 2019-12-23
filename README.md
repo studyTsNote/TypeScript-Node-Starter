@@ -12,11 +12,8 @@
 
 - [准备工作](#准备工作)
 - [开始](#开始)
-- [应用部署](#deploying-the-app)
-	- [准备工作](#pre-reqs-1)
-	- [部署到 Azure App Service](#deploying-to-azure-app-service)
 - [TypeScript + Node](#typescript--node)
-	- [安装 TypeScript](#安装 Typescript)
+	- [安装TypeScript](#安装Typescript)
 	- [项目结构](#项目结构)
 	- [项目的构建](#项目的构建)
 	- [类型声明文件（`.ds.ts`）](#类型声明文件（.ds.ts）)
@@ -77,98 +74,6 @@ npm start
 > **关于编辑器！**— TypeScript  在[任何编辑器](http://www.typescriptlang.org/index.html#download-links)中都有强大的支持，只是本项目使用 [VS Code](https://code.visualstudio.com/) 的预先配置。在整个 README 中，我们将尝试找出 VS Code 真正令人眼前一亮的独特之处。
 
 最后，打开浏览器，访问`http://localhost:3000`即可。
-
-# Deploying the app（不需要，先不管）
-There are many ways to deploy an Node app, and in general, nothing about the deployment process changes because you're using TypeScript.
-In this section, I'll walk you through how to deploy this app to Azure App Service using the extensions available in VS Code because I think it is the easiest and fastest way to get started, as well as the most friendly workflow from a developer's perspective.
-
-## Prerequisites
-- [**Azure account**](https://azure.microsoft.com/en-us/free/) - If you don't have one, you can sign up for free.
-The Azure free tier gives you plenty of resources to play around with including up to 10 App Service instances, which is what we will be using.
-- [**VS Code**](https://code.visualstudio.com/) - We'll be using the interface provided by VS Code to quickly deploy our app.
-- [**Azure App Service VS Code extension**](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureappservice) - In VS Code, search for `Azure App Service` in the extension marketplace (5th button down on the far left menu bar), install the extension, and then reload VS Code.
-- **Create a cloud database** -
-For local development, running MongoDB on localhost is fine, however once we deploy we need a database with high availability.
-The easiest way to achieve this is by using a managed cloud database.
-There are many different providers, but the easiest one to get started with is [MongoLab](#mlab).
-
-###  Create a managed MongoDB with MongoLab
-1. Navigate to [MongoLab's Website](https://mlab.com/), sign up for a free account, and then log in.
-2. In the **MongoDB Deployments** section, click the **Create New** button.
-3. Select any provider (I recommend **Microsoft Azure** as it provides an easier path to upgrading to globally distributed instances later).
-4. Select **Sandbox** to keep it free unless you know what you're doing, and hit **Continue**.
-5. Select a region (I recommend the region geographically closest to your app's users).
-6. Add a name, click **Continue** again, and finally **Submit Order**.
-7. Once your new database is created, select it from the **MongoDB Deployments** section.
-8. Create a user by selecting the **User** tab, clicking the **Add database user** button, adding a username and password, and then clicking **Create**.
-A user account is required to connect to the database, so remember these values because you will need them as part of your connection string.
-9. Copy the connection string from the top of the page, it should look like this: `mongodb://<dbuser>:<dbpassword>@ds036069.mlab.com:36069/test-asdf`
-and replace `<dbUser>` and `<dbpassword>` with the credentials you just created.
-Back in your project, open your `.env` file and update `MONGODB_URI` with your new connection string.
-    > NOTE! - If you don't have an `.env` file yet, rename `.env.example` to `.env` and follow the comments to update the values in that file.
-10. **Success!**
-You can test that it works locally by updating `MONGODB_URI_LOCAL` to the same connection string you just updated in `MONGO_URI`.
-After rebuilding/serving, the app should work, but users that were previously created in local testing will not exist in the new database!
-Don't forget to return the `MONGO_URI_LOCAL` to your local test database (if you so desire).
-
-
-## Deploying to Azure App Service
-Deploying from VS Code can be broken into the following steps:
-1. Authenticate your Azure account in VS Code
-2. Build your app
-3. Zip deploy using the Azure App Service extension
-
-### Sign in to your Azure account
-1. Open VS Code
-2. Expand the Azure App Service menu in the explorer menu
-    - If you don't see this, you might not have the `Azure App Service` extension installed.
-    See the pre-reqs section.
-3. Click `Sign in to Azure...`
-4. Choose `Copy & Open` from the resulting dialog
-    - This will open `aka.ms/devicelogin` in a browser window.
-    If it doesn't, just navigate there manually.
-5. Paste in the code that is on your clipboard.
-6. Go back to VS Code, you should now be signed in.
-You can confirm that everything worked by seeing your Azure subscription listed in the Azure App Service section of the explorer window.
-Additionally you should see the email associated with your account listed in the status bar at the bottom of VS Code.
-
-### Build the app
-Building the app locally is required to generate a zip to deploy because the App Service won't execute build tasks.
-Build the app however you normally would:
-- `ctrl + shift + b` - kicks off default build in VS Code
-- execute `npm run build` from a terminal window
-
-### Zip deploy from VS Code
-1. Make sure your app is built, whatever is currently in your `dist` and `node_modules` folders will be the app that is deployed.
-2. Click the blue up arrow (Deploy to Web App) on the Azure App Service section of the explorer window.
-3. Choose the entire project directory.
-If you haven't changed the name, this will be `TypeScript-Node-Starter`.
-4. Choose the subscription you want this app to be billed to (don't worry, it will be free).
-5. Choose `Create New Web App`
-6. Enter a globally unique name -
-This will be part of the URL that azure generates so it has to be unique, but if you're planning on adding a custom domain later, it's not that important. I usually just add random numbers to the end of the app name, ie. typescript-node-starter-15121214.
-7. Choose a resource group -
-If you don't know what this is, just create a new one.
-If you have lots of cloud resources that should be logically grouped together (think an app service and a database that supports that app) then you would want to put them in the same resource group.
-This can always be updated later though.
-If you create a new resource group, you'll also be prompted to pick a location for that group.
-Pick something geographically close to where your users are.
-8. Choose `Create new App Service Plan` -
-An app service plan mainly is what determines the size and cost of the hardware your app will run on, but it also manages some other settings which we can ignore for now.
-9. Choose `B1 - Basic` - This one is free.
-If you know what you're doing, feel free to select a stronger pricing tier.
-10. Choose your target node runtime version - We are deploying to Linux machines, and in addition we can choose the exact node runtime we want.
-If you don't know what you want, choose whatever the current LTS build is.
-11. Grab a cup of coffee - You'll see everything you just selected getting created in the output window.
-All of this is powered by the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/overview?view=azure-cli-latest) and can be easily replicated if you decide you want to customize this process.
-This deployment is not the fastest option (but it is the easiest!). We are literally bundling everything in your project (including the massive node_modules folder) and uploading it to our Azure app service. Times will vary, but as a baseline, my deployment took roughly 6 minutes.
-12. Add `NODE_ENV` environment variable - In the App Service section of the explorer window, expand the newly created service, right click on **Application Settings**, select **Add New Settings...**, and add `NODE_ENV` as the key and `production` as the value.
-This setting determines which database to point to.
-If you haven't created a cloud database yet, see [the setup instructions](#mlab).
-13. Profit! If everything worked you should see a page that looks like this: [TypeScript Node Starter Demo Site](https://typescript-node-starter.azurewebsites.net/)
-
-### Troubleshooting failed deployments
-Deployment can fail for various reasons, if you get stuck with a page that says *Service Unavailable* or some other error, [open an issue](https://github.com/Microsoft/TypeScript-Node-Starter/issues/new) and I'll try to help you resolve the problems.
 
 # TypeScript + Node
 把 TypeScript 引入到 Express 项目，需要做出哪些修改呢？在接下来的几个章节中，我将展示给你看。请注意，该项目的所有配置不是只在这里有用，它可以随时用作其他 Node.js 项目向 TypeScript 迁移的参考。
@@ -285,7 +190,7 @@ TypeScript 使用 `.d.ts` 文件为那些不是用 TypeScript 编写的 JS 库�
 
 > **注意！**因为我们使用了`"noImplicitAny": true`，所以需要为每个用到的库提供一个 `.d.ts` 文件。虽然可以将 `noImplicitAny` 设置为`false` 来忽略有关丢失 `.d.ts` 文件的错误，但是最好的做法是为每个库提供一个 `.d.ts` 文件。（即使 `.d.ts` 文件是啥都不写！）
 
-### Installing `.d.ts` files from DefinitelyTyped
+### 从 DefinitelyTyped 安装 `.d.ts` 文件
 For the most part, you'll find `.d.ts` files for the libraries you are using on DefinitelyTyped.
 These `.d.ts` files can be easily installed into your project by using the npm scope `@types`.
 For example, if we want the `.d.ts` file for jQuery, we can do so with `npm install --save-dev @types/jquery`.
@@ -444,42 +349,25 @@ This preprocess step is very flexible, but in our case, we just want to compile 
 This all happens in memory when you run the tests, so there are no output `.js` test files for you to manage.
 
 ### 运行测试
-Simply run `npm run test`.
-Note this will also generate a coverage report.
-
-### 编写测试
-Writing tests for web apps has entire books dedicated to it and best practices are strongly influenced by personal style, so I'm deliberately avoiding discussing how or when to write tests in this guide.
-However, if prescriptive guidance on testing is something that you're interested in, [let me know](https://www.surveymonkey.com/r/LN2CV82), I'll do some homework and get back to you.
+只需执行 `npm run test` 。
+执行完毕后，会生成一份测试的覆盖范围报告。
 
 ## ESLint
-ESLint is a code linter which mainly helps catch quickly minor code quality and style issues.
+ESLint 是一个代码检查工具，主要用于找出有问题的代码和规范代码风格。
 
 ### ESLint 规则
-Like most linters, ESLint has a wide set of configurable rules as well as support for custom rule sets.
-All rules are configured through `.eslintrc` configuration file.
-In this project, we are using a fairly basic set of rules with no additional custom rules.
+像大多数检查工具一样，ESLint 有大量的可配置规则集，并且支持自定义规则集。所有规则都通过 `.eslintrc` 文件（支持`json`、`js` 和 `yaml`）进行配置。在此项目中，我们使用了相对基本的规则集，没有其他自定义规则。
 
 ### 运行 ESLint
-Like the rest of our build steps, we use npm scripts to invoke ESLint.
-To run ESLint you can call the main build script or just the ESLint task.
+和其他构建命令一样，我通过 npm 脚本调用 ESLint。
+
 ```sh
-npm run build   // runs full build including ESLint
-npm run lint    // runs only ESLint
+npm run build   // 完整构建任务，包含 ESLint
+npm run lint    // 仅仅运行 ESLint 任务
 ```
-Notice that ESLint is not a part of the main watch task.
+注意：ESLint 不是监视任务的一部分。
 
-If you are interested in seeing ESLint feedback as soon as possible, I strongly recommend the [VS Code ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
-
-### VSCode 扩展
-
-To enhance your development experience while working in VSCode we also provide you a list of the suggested extensions for working with this project:
-
-![Suggested Extensions In VSCode](https://user-images.githubusercontent.com/14539/34583539-6f290a30-f198-11e7-8804-30f40d418e20.png)
-
-- [VS Code ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
-- [Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker)
-- [Azure Cosmos DB](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-cosmosdb)
-- [Azure App Service](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureappservice)
+如果你想看到 ESLint 的实时反馈，那我强烈推荐你安装 [VS Code ESLint 扩展](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)。
 
 # 依赖
 我们通过 `package.json` 管理第三方依赖。在该文件中，你能看到这两部分：
@@ -534,6 +422,6 @@ To install or update these dependencies you can use `npm install` or `npm update
 # Hackathon Starter Project
 A majority of this quick start's content was inspired or adapted from Sahat's excellent [Hackathon Starter project](https://github.com/sahat/hackathon-starter).
 
-## License
+## 证书
 Copyright (c) Microsoft Corporation. All rights reserved.
 Licensed under the [MIT](LICENSE) License.
