@@ -2,21 +2,21 @@ import errorHandler from "errorhandler";
 
 import app from "./app";
 
-/**
- * Error Handler. Provides full stack - remove for production
- */
-app.use(errorHandler());
+if (process.env.NODE_ENV === "development") {
+    // 仅用于开发环境下
+    app.use(errorHandler());
+  }
 
 /**
  * Start Express server.
  */
 const server = app.listen(app.get("port"), () => {
     console.log(
-        "  App is running at http://localhost:%d in %s mode",
-        app.get("port"),
-        app.get("env")
+        "  应用运行模式 %s，访问地址 http://localhost:%d",
+        app.get("env"),
+        app.get("port")
     );
-    console.log("  Press Ctrl+C to stop\n");
+    console.log("  Ctrl+C 停止应用\n");
 });
 
 export default server;

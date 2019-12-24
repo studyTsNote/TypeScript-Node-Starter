@@ -12,7 +12,7 @@ const options: winston.LoggerOptions = {
 const logger = winston.createLogger(options);
 
 if (process.env.NODE_ENV !== "production") {
-    logger.debug("日志级别：debug");
+    logger.debug("日志级别 debug");
 }
 
 export default logger;

@@ -6,7 +6,7 @@
 
 该项目的主要目的是展示用 TypeScript 编写 Node 项目的步骤和工作流程。我们将尽可能地保持更新，同时也鼓励并欢迎社区做出贡献和提出改进建议。
 
-> fork 此项目仅为了小组学习 TypeScript 使用
+> fork 此项目仅为了小组学习 TypeScript 使用，内容可能已经被魔改 :grin:
 
 # 目录
 
@@ -188,7 +188,7 @@ TypeScript 使用 `tsconfig.json` 文件来调整项目编译选项。来让我�
 ## 类型声明文件（`.d.ts`）
 TypeScript 使用 `.d.ts` 文件为那些不是用 TypeScript 编写的 JS 库提供类型声明。只要你有 `.d.ts` 文件，TypeScript 就可以对库进行类型检查，从而在编辑器方面为你提供更棒的支持。所有流行库的 `.d.ts` 文件都维护在 [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types) 。
 
-> **注意！**因为我们使用了`"noImplicitAny": true`，所以需要为每个用到的库提供一个 `.d.ts` 文件。虽然可以将 `noImplicitAny` 设置为`false` 来忽略有关丢失 `.d.ts` 文件的错误，但是最好的做法是为每个库提供一个 `.d.ts` 文件。（即使 `.d.ts` 文件是啥都不写！）
+> **注意！** 因为我们使用了`"noImplicitAny": true`，所以需要为每个用到的库提供一个 `.d.ts` 文件。虽然可以将 `noImplicitAny` 设置为`false` 来忽略有关丢失 `.d.ts` 文件的错误，但是最好的做法是为每个库提供一个 `.d.ts` 文件。（即使 `.d.ts` 文件是啥都不写！）
 
 ### 从 DefinitelyTyped 安装 `.d.ts` 文件
 For the most part, you'll find `.d.ts` files for the libraries you are using on DefinitelyTyped.
@@ -201,7 +201,7 @@ In this template, all the `.d.ts` files have already been added to `devDependenc
 Once `.d.ts` files have been installed using npm, you should see them in your `node_modules/@types` folder.
 The compiler will always look in this folder for `.d.ts` files when resolving JavaScript libraries.
 
-### What if a library isn't on DefinitelyTyped?
+### 如果在 DefinitelyTyped 没有找到对应的库？
 If you try to install a `.d.ts` file from `@types` and it isn't found, or you check DefinitelyTyped and cannot find a specific library, you will want to create your own `.d.ts file`.
 In the `src` folder of this project, you'll find the `types` folder which holds the `.d.ts` files that aren't on DefinitelyTyped (or weren't as of the time of this writing).
 
@@ -376,48 +376,48 @@ npm run lint    // 仅仅运行 ESLint 任务
 
 | 依赖包名                         | 描述                                                           |
 | ------------------------------- | --------------------------------------------------------------------- |
-| async                           | Utility library that provides asynchronous control flow.               |
-| bcrypt-nodejs                   | Library for hashing and salting user passwords.                       |
-| bluebird                        | Promise library                                                       |
-| body-parser                     | Express 4 middleware.                                                 |
-| compression                     | Express 4 middleware.                                                 |
-| connect-mongo                   | MongoDB session store for Express.                                    |
+| async                           | 提供异步流程控制  |
+| bcrypt-nodejs                   | 哈希密码                     |
+| bluebird                        | Promise 实现                                                     |
+| body-parser                     | 请求体解析（Express 中间件）                             |
+| compression                     | 报文压缩（Express 中间件）                                |
+| connect-mongo                   | 用 mongodb 存储 Express session       |
 | dotenv                          | Loads environment variables from .env file.                            |
-| errorhandler                    | Express 4 middleware.                                                 |
-| express                         | Node.js web framework.                                                |
-| express-flash                    | Provides flash messages for Express.                                   |
-| express-session                 | Express 4 middleware.                                                 |
-| express-validator               | Easy form validation for Express.                                     |
-| fbgraph                         | Facebook Graph API library.                                           |
+| errorhandler                    | 错误处理，请仅在开发环境下使用                             |
+| express                         | Web 框架                                             |
+| express-flash                    | 为 Express 提供消息通知                 |
+| express-session                 | Express session 中间件                              |
+| express-validator               | Express 表单验证                                |
+| fbgraph                         | Facebook 图形 API                    |
 | lodash                          | General utility library.                                              |
-| lusca                           | CSRF middleware.                                                      |
-| mongoose                        | MongoDB ODM.                                                          |
-| nodemailer                      | Node.js library for sending emails.                                   |
-| passport                        | Simple and elegant authentication library for node.js                 |
-| passport-facebook               | Sign-in with Facebook plugin.                                         |
-| passport-local                  | Sign-in with Username and Password plugin.                            |
+| lusca                           | 安全中间件                                                   |
+| mongoose                        | MongoDB ODM 框架（对象-文档-映射）                                  |
+| nodemailer                      | 发送邮件                               |
+| passport                        | 身份验证               |
+| passport-facebook               | 通过 Facebook 账户注册（身份验证）   |
+| passport-local                  | 通过用户名和密码注册（身份验证） |
 | pug (jade)                      | Template engine for Express.                                          |
-| request                         | Simplified HTTP request library.                                       |
-| request-promise                 | Promisified HTTP request library. Let's us use async/await             |
-| winston                         | Logging library                                                       |
+| request                         | 用来发 HTTP 请求                        |
+| request-promise                 | 发送异步 HTTP 请求 |
+| winston                         | 日志                                                      |
 
 ## `devDependencies`
 
 | 依赖包名                         | 描述                                                            |
 | ------------------------------- | ---------------------------------------------------------------------- |
-| @types                          | Dependencies in this folder are `.d.ts` files used to provide types    |
-| chai                            | Testing utility library that makes it easier to write tests            |
-| concurrently                    | Utility that manages multiple concurrent tasks. Used with npm scripts  |
-| jest                            | Testing library for JavaScript.                                        |
-| node-sass                       | Allows to compile .scss files to .css                                  |
-| nodemon                         | Utility that automatically restarts node process when it crashes       |
-| supertest                       | HTTP assertion library.                                                |
-| ts-jest                         | A preprocessor with sourcemap support to help use TypeScript with Jest.|
-| ts-node                         | Enables directly running TS files. Used to run `copy-static-assets.ts` |
-| eslint                          | Linter for JavaScript and TypeScript files                             |
-| typescript                      | JavaScript compiler/type checker that boosts JavaScript productivity   |
+| @types                          | 该依赖目录下全是 `.d.ts` 文件，提供类型声明 |
+| chai                            | 断言库           |
+| concurrently                    | 管理多个并发任务。在 npm 脚本中使用 |
+| jest                            | 测试框架                                      |
+| node-sass                       | 编译 `.scss` 为 `.css`               |
+| nodemon                         | 监听 `.js` 更改，自动重启服务 |
+| supertest                       | HTTP 断言库                                            |
+| ts-jest                         | TypeScript 编写 jest 测试 |
+| ts-node                         | 可直接执行 `.ts`  文件。用来执行 `copy-static-assets.ts` |
+| eslint                          | 代码检查                           |
+| typescript                      | 主角   |
 
-To install or update these dependencies you can use `npm install` or `npm update`.
+使用 `npm install` 或 `npm update` 来安装和更新依赖。
 
 # Hackathon Starter Project
 A majority of this quick start's content was inspired or adapted from Sahat's excellent [Hackathon Starter project](https://github.com/sahat/hackathon-starter).

@@ -3,10 +3,10 @@ import dotenv from "dotenv";
 import fs from "fs";
 
 if (fs.existsSync(".env")) {
-    logger.debug("使用 .env 文件配置环境变量");
+    logger.debug("加载 .env 文件配置环境变量");
     dotenv.config({ path: ".env" });
 } else {
-    logger.debug("使用 .env.example 文件配置环境变量");
+    logger.debug("加载 .env.example 文件配置环境变量");
     dotenv.config({ path: ".env.example" });
 }
 export const ENVIRONMENT = process.env.NODE_ENV;
