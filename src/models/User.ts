@@ -2,6 +2,13 @@ import bcrypt from "bcrypt-nodejs";
 import crypto from "crypto";
 import mongoose from "mongoose";
 
+export interface AuthToken {
+    accessToken: string;
+    kind: string;
+}
+
+type comparePasswordFunction = (candidatePassword: string, cb: (err: Error, isMatch: boolean) => void) => void;
+
 // 导出一个交叉类型别名
 export type UserDocument = mongoose.Document & {
     email: string;
@@ -10,6 +17,7 @@ export type UserDocument = mongoose.Document & {
     passwordResetExpires: Date;
 
     facebook: string;
+    github: string;
     tokens: AuthToken[];
 
     profile: {
@@ -24,13 +32,6 @@ export type UserDocument = mongoose.Document & {
     gravatar: (size: number) => string;
 };
 
-type comparePasswordFunction = (candidatePassword: string, cb: (err: Error, isMatch: boolean) => void) => void;
-
-export interface AuthToken {
-    accessToken: string;
-    kind: string;
-}
-
 const userSchema = new mongoose.Schema({
     email: { type: String, unique: true },
     password: String,
@@ -40,6 +41,7 @@ const userSchema = new mongoose.Schema({
     facebook: String,
     twitter: String,
     google: String,
+    github: String,
     tokens: Array,
 
     profile: {
@@ -56,11 +58,17 @@ const userSchema = new mongoose.Schema({
  */
 userSchema.pre("save", function save(next) {
     const user = this as UserDocument;
-    if (!user.isModified("password")) { return next(); }
+    if (!user.isModified("password")) { 
+        return next(); 
+    }
     bcrypt.genSalt(10, (err, salt) => {
-        if (err) { return next(err); }
+        if (err) { 
+            return next(err); 
+        }
         bcrypt.hash(user.password, salt, undefined, (err: mongoose.Error, hash) => {
-            if (err) { return next(err); }
+            if (err) { 
+                return next(err); 
+            }
             user.password = hash;
             next();
         });
@@ -76,7 +84,7 @@ const comparePassword: comparePasswordFunction = function (candidatePassword, cb
 userSchema.methods.comparePassword = comparePassword;
 
 /**
- * Helper method for getting user's gravatar.
+ * 获取用户头像链接
  */
 userSchema.methods.gravatar = function (size: number = 200) {
     if (!this.email) {

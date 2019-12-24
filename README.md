@@ -394,8 +394,9 @@ npm run lint    // 仅仅运行 ESLint 任务
 | mongoose                        | MongoDB ODM 框架（对象-文档-映射）                                  |
 | nodemailer                      | 发送邮件                               |
 | passport                        | 身份验证               |
-| passport-facebook               | 通过 Facebook 账户注册（身份验证）   |
-| passport-local                  | 通过用户名和密码注册（身份验证） |
+| passport-facebook               | 通过 Facebook 账户身份验证   |
+| passport-github | 通过 GitHub 账户身份验证 |
+| passport-local                  | 通过用户名和密码身份验证 |
 | pug (jade)                      | Template engine for Express.                                          |
 | request                         | 用来发 HTTP 请求                        |
 | request-promise                 | 发送异步 HTTP 请求 |

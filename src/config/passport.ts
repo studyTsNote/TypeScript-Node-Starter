@@ -1,14 +1,15 @@
 import passport from "passport";
 import passportLocal from "passport-local";
 import passportFacebook from "passport-facebook";
+import passportGitHub from "passport-github";
 import _ from "lodash";
 
-// import { User, UserType } from '../models/User';
 import { User, UserDocument } from "../models/User";
 import { Request, Response, NextFunction } from "express";
 
 const LocalStrategy = passportLocal.Strategy;
 const FacebookStrategy = passportFacebook.Strategy;
+const GitHubStrategy = passportGitHub.Strategy;
 
 passport.serializeUser((user, done) => {
     done(undefined, (user as UserDocument).id);
@@ -22,7 +23,7 @@ passport.deserializeUser((id, done) => {
 
 
 /**
- * Sign in using Email and Password.
+ * 使用邮箱和密码登录
  */
 passport.use(new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
     User.findOne({ email: email.toLowerCase() }, (err, user: UserDocument) => {
@@ -41,24 +42,23 @@ passport.use(new LocalStrategy({ usernameField: "email" }, (email, password, don
 }));
 
 
-/**
- * OAuth Strategy Overview
- *
- * - User is already logged in.
- *   - Check if there is an existing account with a provider id.
- *     - If there is, return an error message. (Account merging not supported)
- *     - Else link new OAuth account with currently logged-in user.
- * - User is not logged in.
- *   - Check if it's a returning user.
- *     - If returning user, sign in and we are done.
- *     - Else check if there is an existing account with user's email.
- *       - If there is, return an error message.
- *       - Else create a new account.
- */
+ /**
+  * OAuth 策略简介
+  * 
+  * - 用户已经登录
+  *     - 检查是否存在带有提供者 ID 的账户
+  *         - 如果有了，返回错误信息（不支持合并账户）
+  *         - 否则，关联新的 OAuth 账户到当前登录用户
+  * - 用户未登录
+  *     - 检查是否老用户
+  *         - 如果是，直接登录
+  *         - 否则，检查是否已存在该用户邮箱的账户
+  *             - 如果有了，返回一个错误信息
+  *             - 创建一个新的账户 
+  */
 
-
 /**
- * Sign in with Facebook.
+ * 使用 Facebook 账号登录
  */
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_ID,
@@ -66,7 +66,7 @@ passport.use(new FacebookStrategy({
     callbackURL: "/auth/facebook/callback",
     profileFields: ["name", "email", "link", "locale", "timezone"],
     passReqToCallback: true
-}, (req: any, accessToken, refreshToken, profile, done) => {
+}, (req: Request, accessToken, refreshToken, profile, done) => {
     if (req.user) {
         User.findOne({ facebook: profile.id }, (err, existingUser) => {
             if (err) { return done(err); }
@@ -74,7 +74,7 @@ passport.use(new FacebookStrategy({
                 req.flash("errors", { msg: "There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account." });
                 done(err);
             } else {
-                User.findById(req.user.id, (err, user: any) => {
+                User.findById((req.user as UserDocument).id, (err, user: UserDocument) => {
                     if (err) { return done(err); }
                     user.facebook = profile.id;
                     user.tokens.push({ kind: "facebook", accessToken });
@@ -100,7 +100,7 @@ passport.use(new FacebookStrategy({
                     req.flash("errors", { msg: "There is already an account using this email address. Sign in to that account and link it with Facebook manually from Account Settings." });
                     done(err);
                 } else {
-                    const user: any = new User();
+                    const user: UserDocument = new User();
                     user.email = profile._json.email;
                     user.facebook = profile.id;
                     user.tokens.push({ kind: "facebook", accessToken });
@@ -118,7 +118,12 @@ passport.use(new FacebookStrategy({
 }));
 
 /**
- * Login Required middleware.
+ * 使用 GitHub 账号登录
+ */
+// TODO
+
+/**
+ * 登录中间件
  */
 export const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
     if (req.isAuthenticated()) {
@@ -128,7 +133,7 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
 };
 
 /**
- * Authorization Required middleware.
+ * 身份验证中间件
  */
 export const isAuthorized = (req: Request, res: Response, next: NextFunction) => {
     const provider = req.path.split("/").slice(-1)[0];
