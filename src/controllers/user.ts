@@ -11,7 +11,7 @@ import "../config/passport";
 
 /**
  * GET /login
- * Login page.
+ * 登录页面
  */
 export const getLogin = (req: Request, res: Response) => {
     if (req.user) {
@@ -24,11 +24,11 @@ export const getLogin = (req: Request, res: Response) => {
 
 /**
  * POST /login
- * Sign in using email and password.
+ * 使用邮箱和密码登录
  */
 export const postLogin = async (req: Request, res: Response, next: NextFunction) => {
-    await check("email", "Email is not valid").isEmail().run(req);
-    await check("password", "Password cannot be blank").isLength({min: 1}).run(req);
+    await check("email", "无效的电子邮箱").isEmail().run(req);
+    await check("password", "密码不能为空").isLength({min: 1}).run(req);
     // eslint-disable-next-line @typescript-eslint/camelcase
     await sanitize("email").normalizeEmail({ gmail_remove_dots: false }).run(req);
 
@@ -40,14 +40,18 @@ export const postLogin = async (req: Request, res: Response, next: NextFunction)
     }
 
     passport.authenticate("local", (err: Error, user: UserDocument, info: IVerifyOptions) => {
-        if (err) { return next(err); }
+        if (err) { 
+            return next(err); 
+        }
         if (!user) {
             req.flash("errors", {msg: info.message});
             return res.redirect("/login");
         }
         req.logIn(user, (err) => {
-            if (err) { return next(err); }
-            req.flash("success", { msg: "Success! You are logged in." });
+            if (err) { 
+                return next(err); 
+            }
+            req.flash("success", { msg: "登录成功！" });
             res.redirect(req.session.returnTo || "/");
         });
     })(req, res, next);
@@ -55,7 +59,7 @@ export const postLogin = async (req: Request, res: Response, next: NextFunction)
 
 /**
  * GET /logout
- * Log out.
+ * 登出
  */
 export const logout = (req: Request, res: Response) => {
     req.logout();
@@ -64,7 +68,7 @@ export const logout = (req: Request, res: Response) => {
 
 /**
  * GET /signup
- * Signup page.
+ * 注册页面
  */
 export const getSignup = (req: Request, res: Response) => {
     if (req.user) {
@@ -77,7 +81,7 @@ export const getSignup = (req: Request, res: Response) => {
 
 /**
  * POST /signup
- * Create a new local account.
+ * 新建一个本地账户（邮箱和密码）
  */
 export const postSignup = async (req: Request, res: Response, next: NextFunction) => {
     await check("email", "Email is not valid").isEmail().run(req);
@@ -118,7 +122,7 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
 
 /**
  * GET /account
- * Profile page.
+ * 个人信息页面
  */
 export const getAccount = (req: Request, res: Response) => {
     res.render("account/profile", {
@@ -128,7 +132,7 @@ export const getAccount = (req: Request, res: Response) => {
 
 /**
  * POST /account/profile
- * Update profile information.
+ * 更新个人信息
  */
 export const postUpdateProfile = async (req: Request, res: Response, next: NextFunction) => {
     await check("email", "Please enter a valid email address.").isEmail().run(req);
@@ -166,7 +170,7 @@ export const postUpdateProfile = async (req: Request, res: Response, next: NextF
 
 /**
  * POST /account/password
- * Update current password.
+ * 更改当前密码
  */
 export const postUpdatePassword = async (req: Request, res: Response, next: NextFunction) => {
     await check("password", "Password must be at least 4 characters long").isLength({ min: 4 }).run(req);
@@ -193,7 +197,7 @@ export const postUpdatePassword = async (req: Request, res: Response, next: Next
 
 /**
  * POST /account/delete
- * Delete user account.
+ * 删除账户
  */
 export const postDeleteAccount = (req: Request, res: Response, next: NextFunction) => {
     const user = req.user as UserDocument;
@@ -207,18 +211,23 @@ export const postDeleteAccount = (req: Request, res: Response, next: NextFunctio
 
 /**
  * GET /account/unlink/:provider
- * Unlink OAuth provider.
+ * 解除第三方账号关联
  */
 export const getOauthUnlink = (req: Request, res: Response, next: NextFunction) => {
     const provider = req.params.provider;
     const user = req.user as UserDocument;
-    User.findById(user.id, (err, user: any) => {
-        if (err) { return next(err); }
-        user[provider] = undefined;
+    User.findById(user.id, (err, user: UserDocument) => {
+        if (err) {
+            return next(err);
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (user as any)[provider] = undefined;
         user.tokens = user.tokens.filter((token: AuthToken) => token.kind !== provider);
         user.save((err: WriteError) => {
-            if (err) { return next(err); }
-            req.flash("info", { msg: `${provider} account has been unlinked.` });
+            if (err) {
+                return next(err);
+            }
+            req.flash("info", { msg: `已解绑 ${provider} 账号` });
             res.redirect("/account");
         });
     });
@@ -226,7 +235,7 @@ export const getOauthUnlink = (req: Request, res: Response, next: NextFunction) 
 
 /**
  * GET /reset/:token
- * Reset Password page.
+ * 密码重置页面（从重置邮件中点击链接进入）
  */
 export const getReset = (req: Request, res: Response, next: NextFunction) => {
     if (req.isAuthenticated()) {
@@ -249,7 +258,7 @@ export const getReset = (req: Request, res: Response, next: NextFunction) => {
 
 /**
  * POST /reset/:token
- * Process the reset password request.
+ * 处理密码重置请求
  */
 export const postReset = async (req: Request, res: Response, next: NextFunction) => {
     await check("password", "Password must be at least 4 characters long.").isLength({ min: 4 }).run(req);
@@ -267,10 +276,10 @@ export const postReset = async (req: Request, res: Response, next: NextFunction)
             User
                 .findOne({ passwordResetToken: req.params.token })
                 .where("passwordResetExpires").gt(Date.now())
-                .exec((err, user: any) => {
+                .exec((err, user: UserDocument) => {
                     if (err) { return next(err); }
                     if (!user) {
-                        req.flash("errors", { msg: "Password reset token is invalid or has expired." });
+                        req.flash("errors", { msg: "无效的密码重置链接，或者链接已经过期啦" });
                         return res.redirect("back");
                     }
                     user.password = req.body.password;
@@ -311,7 +320,7 @@ export const postReset = async (req: Request, res: Response, next: NextFunction)
 
 /**
  * GET /forgot
- * Forgot Password page.
+ * 忘记密码页面
  */
 export const getForgot = (req: Request, res: Response) => {
     if (req.isAuthenticated()) {
@@ -324,7 +333,7 @@ export const getForgot = (req: Request, res: Response) => {
 
 /**
  * POST /forgot
- * Create a random token, then the send user an email with a reset link.
+ * 创建一个随机 token，然后向用户发送一封密码重置邮件
  */
 export const postForgot = async (req: Request, res: Response, next: NextFunction) => {
     await check("email", "Please enter a valid email address.").isEmail().run(req);
@@ -345,21 +354,21 @@ export const postForgot = async (req: Request, res: Response, next: NextFunction
                 done(err, token);
             });
         },
-        function setRandomToken(token: AuthToken, done: Function) {
-            User.findOne({ email: req.body.email }, (err, user: any) => {
+        function setRandomToken(token: string, done: Function) {
+            User.findOne({ email: req.body.email }, (err, user: UserDocument) => {
                 if (err) { return done(err); }
                 if (!user) {
                     req.flash("errors", { msg: "Account with that email address does not exist." });
                     return res.redirect("/forgot");
                 }
                 user.passwordResetToken = token;
-                user.passwordResetExpires = Date.now() + 3600000; // 1 hour
+                user.passwordResetExpires = new Date(Date.now() + 3600000); // 1小时
                 user.save((err: WriteError) => {
                     done(err, token, user);
                 });
             });
         },
-        function sendForgotPasswordEmail(token: AuthToken, user: UserDocument, done: Function) {
+        function sendForgotPasswordEmail(token: string, user: UserDocument, done: Function) {
             const transporter = nodemailer.createTransport({
                 service: "SendGrid",
                 auth: {

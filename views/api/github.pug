@@ -3,29 +3,28 @@ extends ../layout
 block content
   .page-header
     h2
-      i.fa.fa-facebook-square(style='color: #335397')
-      | Facebook API
+      i.fa.fa-github-square
+      | #{title}
   .btn-group.btn-group-justified
-    a.btn.btn-primary(href='https://developers.facebook.com/docs/graph-api/quickstart/', target='_blank')
-      i.fa.fa-check-square-o
-      | Quickstart
-    a.btn.btn-primary(href='https://developers.facebook.com/tools/explorer', target='_blank')
-      i.fa.fa-facebook
-      | Graph API Explorer
-    a.btn.btn-primary(href='https://developers.facebook.com/docs/graph-api/reference/', target='_blank')
+    a.btn.btn-github(href='https://developer.github.com/v4/guides/', target='_blank', style='margin-right: 10px')
+      i.fa.fa-book
+      | Guides
+    a.btn.btn-github(href='https://developer.github.com/v4/explorer/', target='_blank', style='margin-right: 10px')
+      i.fa.fa-play-circle
+      | Explorer
+    a.btn.btn-github(href='https://developer.github.com/v4/', target='_blank')
       i.fa.fa-code-fork
-      | API Reference
+      | Reference
+
+  each val in [1, 2, 3]
+    br
 
   h3
     i.fa.fa-user
     |  My Profile
-  img.thumbnail(src=`https://graph.facebook.com/${profile.id}/picture?type=large`, width='90', height='90', alt=(profile.name || profile.username))
+  img.thumbnail(src=profile.avatarUrl, width='90', height='90', alt=(profile.name || profile.username))
   h4= profile.name
-  h6 First Name: #{profile.first_name}
-  h6 Last Name: #{profile.last_name}
-  h6 Gender: #{profile.gender}
-  h6 Username: #{profile.username}
-  h6 Link: #{profile.link}
-  h6 Email: #{profile.email}
-  h6 Locale: #{profile.locale}
-  h6 Timezone: #{profile.timezone}
+  h6 Website: #{profile.websiteUrl}
+  h6 Email: #{email}
+  h6 Location: #{profile.location}
+  h6 Bio: #{profile.bio}

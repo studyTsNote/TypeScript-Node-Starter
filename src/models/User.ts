@@ -26,11 +26,22 @@ export type UserDocument = mongoose.Document & {
         location: string;
         website: string;
         picture: string;
+        bio: string;
     };
 
     comparePassword: comparePasswordFunction;
     gravatar: (size: number) => string;
 };
+
+export interface GitHubProfile {
+    id: string;
+    name: string;
+    email: string;
+    location: string;
+    blog: string;
+    avatar_url: string;
+    bio: string;
+}
 
 const userSchema = new mongoose.Schema({
     email: { type: String, unique: true },
@@ -49,12 +60,13 @@ const userSchema = new mongoose.Schema({
         gender: String,
         location: String,
         website: String,
-        picture: String
+        picture: String,
+        bio: String
     }
 }, { timestamps: true });
 
 /**
- * Password hash middleware.
+ * 密码哈希散列中间件
  */
 userSchema.pre("save", function save(next) {
     const user = this as UserDocument;
@@ -76,7 +88,7 @@ userSchema.pre("save", function save(next) {
 });
 
 const comparePassword: comparePasswordFunction = function (candidatePassword, cb) {
-    bcrypt.compare(candidatePassword, this.password, (err: mongoose.Error, isMatch: boolean) => {
+    bcrypt.compare(candidatePassword, this.password || "", (err: mongoose.Error, isMatch: boolean) => {
         cb(err, isMatch);
     });
 };

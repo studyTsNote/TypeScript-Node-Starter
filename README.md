@@ -382,14 +382,15 @@ npm run lint    // 仅仅运行 ESLint 任务
 | body-parser                     | 请求体解析（Express 中间件）                             |
 | compression                     | 报文压缩（Express 中间件）                                |
 | connect-mongo                   | 用 mongodb 存储 Express session       |
-| dotenv                          | Loads environment variables from .env file.                            |
+| dotenv                          | 通过 `.env` 文件配置 Node 环境变量    |
 | errorhandler                    | 错误处理，请仅在开发环境下使用                             |
 | express                         | Web 框架                                             |
 | express-flash                    | 为 Express 提供消息通知                 |
 | express-session                 | Express session 中间件                              |
 | express-validator               | Express 表单验证                                |
 | fbgraph                         | Facebook 图形 API                    |
-| lodash                          | General utility library.                                              |
+| graphql-request | GraphQL 客户端，用于请求支持 GraphQL 的 API |
+| lodash                          | 通用工具库                                         |
 | lusca                           | 安全中间件                                                   |
 | mongoose                        | MongoDB ODM 框架（对象-文档-映射）                                  |
 | nodemailer                      | 发送邮件                               |
