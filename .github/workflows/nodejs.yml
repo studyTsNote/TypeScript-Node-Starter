@@ -13,7 +13,6 @@ jobs:
         node-version: ['10']
 
     steps:
-    - name: checkout
     - uses: actions/checkout@v1
       
     - name: Use Node.js ${{ matrix.node-version }}
